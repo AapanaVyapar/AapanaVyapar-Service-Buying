@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+option go_package = ".;pb";
+option java_multiple_files = true;
+option java_package = "com.aapanavyapar.aapanavyapar.services";
+
+import "common-message.proto";
+
+message CreateOrderRequest {
+  string apiKey = 1;
+  string token = 2;
+  string productId = 3;
+  string shopId = 4;
+  Address address = 5;
+  uint32 quantity = 6;
+}
+
+message CreateOrderResponse {
+  string orderId = 6;
+  string currency = 7;
+  float amount = 8;
+  string productName = 9;
+  string productId = 10;
+  string shopId = 11;
+}

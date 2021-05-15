@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+option go_package = ".;pb";
+option java_multiple_files = true;
+option java_package = "com.aapanavyapar.aapanavyapar.services";
+
+import "order-message.proto";
+import "capture-message.proto";
+
+service BuyingService {
+  rpc PlaceOrder (CreateOrderRequest) returns (CreateOrderResponse);
+  rpc CapturePayment (CapturePaymentRequest) returns (CapturePaymentResponse);
+}
