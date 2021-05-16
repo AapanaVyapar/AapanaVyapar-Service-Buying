@@ -3,7 +3,6 @@ package data_base
 import (
 	"aapanavyapar-service-buying/configurations/mongodb"
 	"aapanavyapar-service-buying/data-base/helpers"
-	"aapanavyapar-service-buying/data-base/mapper"
 	"aapanavyapar-service-buying/data-base/structs"
 	"aapanavyapar-service-buying/pb"
 	"context"
@@ -31,7 +30,6 @@ func (dataBase *MongoDataBase) CreateShop(context context.Context, dataInsert *s
 
 	shopData := mongodb.OpenShopDataCollection(dataBase.Data)
 
-	dataInsert.SectorNo = mapper.MapLocationToSector(dataInsert.Location)
 	dataInsert.Timestamp = time.Now().UTC()
 
 	dataBase.mutex.Lock()
@@ -360,7 +358,6 @@ func (dataBase *MongoDataBase) UpdateShopAddressAndLocationInShopData(context co
 	}
 
 	shopData := mongodb.OpenShopDataCollection(dataBase.Data)
-	sectorNo := mapper.MapLocationToSector(&location)
 
 	dataBase.mutex.Lock()
 	defer dataBase.mutex.Unlock()
@@ -371,9 +368,8 @@ func (dataBase *MongoDataBase) UpdateShopAddressAndLocationInShopData(context co
 		},
 		bson.M{
 			"$set": bson.M{
-				"address":   address,
-				"location":  location,
-				"sector_no": sectorNo,
+				"address":  address,
+				"location": location,
 			},
 		},
 	)
@@ -545,67 +541,48 @@ func (dataBase *MongoDataBase) UpdateOperationalHoursInShopData(context context.
 }
 
 /*
-{
-    _id: '123',
-    shop_name: 'Testing Stores',
-    shop_keeper_name: 'ABC Person',
-    images: [
-        'https://store.com'
-    ],
-    primary_image: 'https://www.primary.store.com',
-    address: {
-        full_name: 'ABC Person',
-        house_details: 'Testing Store',
-        street_details: 'Mustufa Chishti Colony Main Rd, Panchshil Nagar',
-        land_mark: 'Milap Store',
-        code: '425107',
-        city: 'chopda',
-        state: 'maharastra',
-        country: 'india',
-        phone_no: '9890713171'
-    },
-    location: {
-        longitude: '21.246435522726177',
-        latitude: '75.29615236552934'
-    },
-    sector_no: 10,
-    category: [
-        7,
-        4
-    ],
-    business_information: 'Famous Seller Of Cloths In Chopda',
-    operational_hours: {
-        sunday: [
-            '0AM',
-            '0PM'
-        ],
-        monday: [
-            '9AM',
-            '9PM'
-        ],
-        tuesday: [
-            '9AM',
-            '9PM'
-        ],
-        wednesday: [
-            '9AM',
-            '9PM'
-        ],
-        thursday: [
-            '9AM',
-            '9PM'
-        ],
-        friday: [
-            '9AM',
-            '9PM'
-        ],
-        saturday: [
-            '9AM',
-            '9PM'
-        ]
-    },
-    timestamp: ISODate('2021-04-12T12:19:12.058Z')
-}
+	dataInsert := structs.ShopData{
+		_Id:            primitive.NewObjectID(), //shopId
+		ShopName:       "Milap Stores",
+		ShopKeeperName: "ABC Person",
+		Images:         []string{"https://www.google.com", "https://www.google.com"},
+		PrimaryImage:  "https://www.google.com",
+		Address: &structs.Address{
+			FullName:      "ABC Person",
+			HouseDetails:  "Milap Store",
+			StreetDetails: "Mustufa Chishti Colony Main Rd, Panchshil Nagar",
+			LandMark:      "",
+			PinCode:       "425107",
+			City:          "chopda",
+			State:         "maharastra",
+			Country:       "india",
+			PhoneNo:       "+919890713171",
+		},
+		Location: &structs.Location{
+			Longitude: "21.246435522726177",
+			Latitude:  "75.29615236552934",
+		},
+		Category:            []constants.Categories{constants.MENS_ACCESSORIES, constants.WONENS_CLOTHING},
+		BusinessInformation: "Famous Seller Of Cloths In Chopda",
+		OperationalHours: &structs.OperationalHours{
+			Sunday:    [2]string{"", ""},
+			Monday:    [2]string{"9AM", "9PM"},
+			Tuesday:   [2]string{"9AM", "9PM"},
+			Wednesday: [2]string{"9AM", "9PM"},
+			Thursday:  [2]string{"9AM", "9PM"},
+			Friday:    [2]string{"9AM", "9PM"},
+			Saturday:  [2]string{"9AM", "9PM"},
+		},
+		Ratings: &structs.Rating{
+			UserId:    "1",
+			UserName:  "ABC",
+			Comment:   "Excellent",
+			Rating:    constants.GOOD,
+			Timestamp: time.Now().UTC(),
+		},
+		Timestamp: time.Now().UTC(),
+	}
+
 */
 /*
 	Declarations : Once the shop is created you can not change its name but you can delete your shop.

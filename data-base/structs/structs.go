@@ -39,7 +39,8 @@ type OrderData struct {
 	Price             float32            `bson:"price" json:"price" validate:"required"`
 	DeliveryCost      float32            `bson:"delivery_cost" json:"delivery_cost" validate:"required"`
 	Quantity          uint32             `bson:"quantity" json:"quantity" validate:"required"`
-	RazorpaySignature string             `bson:"razorpay_signature" json:"razorpay_signature" validate:"required"`
+	RazorpayPaymentId string             `bson:"razorpay_payment_id" json:"razorpay_payment_id" validate:"required"`
+	RazorpayOrderId   string             `bson:"razorpay_order_id" json:"razorpay_order_id" validate:"required"`
 	Offer             uint32             `bson:"offer" json:"offer" validate:"required"`
 }
 

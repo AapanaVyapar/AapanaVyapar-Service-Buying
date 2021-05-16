@@ -16,7 +16,7 @@ import (
 	"time"
 )
 
-func (dataBase *MongoDataBase) CreateOrder(context context.Context, userId string, paymentId string, cache structs.CacheOrder, payment map[string]interface{}, razorpaySignature string, razorpayClient *razorpay.Client) (primitive.ObjectID, error) {
+func (dataBase *MongoDataBase) CreateOrder(context context.Context, userId string, paymentId string, cache structs.CacheOrder, payment map[string]interface{}, razorpayOrderId string, razorpayClient *razorpay.Client) (primitive.ObjectID, error) {
 	if !dataBase.IsExistInUserData(context, "_id", userId) {
 		return primitive.ObjectID{}, fmt.Errorf("user does not exist")
 	}
@@ -41,7 +41,8 @@ func (dataBase *MongoDataBase) CreateOrder(context context.Context, userId strin
 	order.Quantity = cache.Quantity
 	order.ProductId = cache.ProductId
 	order.Address = &cache.Address
-	order.RazorpaySignature = razorpaySignature
+	order.RazorpayOrderId = razorpayOrderId
+	order.RazorpayPaymentId = paymentId
 	order.DeliveryTimeStamp = cache.DeliveryTimeStamp
 	order.DeliveryCost = cache.DeliveryCost
 	order.Price = float32(payment["amount"].(float64))

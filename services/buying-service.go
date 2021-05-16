@@ -132,7 +132,10 @@ func (buyingService *BuyingService) CapturePayment(ctx context.Context, request 
 		return nil, status.Errorf(codes.Unauthenticated, "Request With Invalid Token : %v", err)
 	}
 
-	bytes, err := buyingService.Cash.GetDataFromCash(ctx, request.GetOrderId())
+	paymentId := request.GetRazorpayPaymentId()
+	orderId := request.GetRazorpayOrderId()
+
+	bytes, err := buyingService.Cash.GetDataFromCash(ctx, orderId)
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "Unable To Get Order From Cache : %v", err)
 	}
@@ -144,27 +147,17 @@ func (buyingService *BuyingService) CapturePayment(ctx context.Context, request 
 		return nil, status.Errorf(codes.Unauthenticated, "Order Does Not Belongs To You")
 	}
 
-	paymentId := request.GetRazorpayPaymentId()
-	orderId := request.GetRazorpayOrderId()
-	signature := request.GetRazorpaySignature()
-
-	if orderId != request.GetOrderId() {
-		return nil, status.Errorf(codes.InvalidArgument, "Invalid RazorPay Order Id : %v", err)
-	}
-
-	state := helpers.VerifySignature(orderId+"|"+paymentId, signature, os.Getenv("SECRET_KEY_RAZORPAY"))
-
 	client := razorpay.NewClient(os.Getenv("APT_KEY_RAZORPAY"), os.Getenv("SECRET_KEY_RAZORPAY"))
 	payment, err := client.Payment.Fetch(paymentId, nil, nil)
 	if err != nil {
 		return nil, status.Errorf(codes.Unknown, "Error of Payment :  %v ", err)
 	}
 
-	if !state && payment["status"].(string) != "authorized" {
+	if payment["status"].(string) != "authorized" {
 		return nil, status.Errorf(codes.Unknown, "Invalid Payment Status : "+payment["status"].(string))
 	}
 
-	oId, err := buyingService.Data.CreateOrder(ctx, token.Audience, paymentId, cache, payment, signature, client)
+	oId, err := buyingService.Data.CreateOrder(ctx, token.Audience, paymentId, cache, payment, orderId, client)
 	if err != nil {
 		return nil, err
 	}

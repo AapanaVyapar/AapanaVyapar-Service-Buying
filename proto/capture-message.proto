@@ -8,13 +8,11 @@ option java_package = "com.aapanavyapar.aapanavyapar.services";
 message CapturePaymentRequest {
   string apiKey = 12;
   string token = 13;
-  string orderId = 14;
-  string razorpayPaymentId = 15;
-  string razorpayOrderId = 16;
-  string razorpaySignature = 17;
+  string razorpayPaymentId = 14;
+  string razorpayOrderId = 15;
 }
 
 message CapturePaymentResponse {
-  bool status = 18;
-  string orderId = 19;
+  bool status = 16;
+  string orderId = 17;
 }
