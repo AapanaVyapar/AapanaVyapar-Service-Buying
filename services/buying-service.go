@@ -115,7 +115,7 @@ func (buyingService *BuyingService) PlaceOrder(ctx context.Context, request *pb.
 	return &pb.CreateOrderResponse{
 		OrderId:     body["id"].(string),
 		Currency:    body["currency"].(string),
-		Amount:      body["amount"].(float32),
+		Amount:      float32(body["amount"].(float64)),
 		ProductName: product.Title,
 		ProductId:   request.GetProductId(),
 		ShopId:      request.GetShopId(),
