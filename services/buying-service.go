@@ -43,6 +43,10 @@ func (buyingService *BuyingService) PlaceOrder(ctx context.Context, request *pb.
 		return nil, status.Errorf(codes.Unauthenticated, "Request With Invalid Token : %v", err)
 	}
 
+	if request.GetQuantity() <= 0 {
+		return nil, status.Errorf(codes.Unauthenticated, "Quantity Can Not Be Zero : %v", err)
+	}
+
 	address := structs.Address{
 		FullName:      request.GetAddress().GetFullName(),
 		HouseDetails:  request.GetAddress().GetHouseDetails(),
@@ -113,12 +117,13 @@ func (buyingService *BuyingService) PlaceOrder(ctx context.Context, request *pb.
 	}
 
 	return &pb.CreateOrderResponse{
-		OrderId:     body["id"].(string),
-		Currency:    body["currency"].(string),
-		Amount:      float32(body["amount"].(float64)),
-		ProductName: product.Title,
-		ProductId:   request.GetProductId(),
-		ShopId:      request.GetShopId(),
+		OrderId:      body["id"].(string),
+		Currency:     body["currency"].(string),
+		Amount:       float32(body["amount"].(float64)),
+		ProductName:  product.Title,
+		ProductImage: product.Images[0],
+		ProductId:    request.GetProductId(),
+		ShopId:       request.GetShopId(),
 	}, nil
 }
 

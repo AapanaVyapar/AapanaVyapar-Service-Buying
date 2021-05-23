@@ -7,19 +7,20 @@ option java_package = "com.aapanavyapar.aapanavyapar.services";
 import "common-message.proto";
 
 message CreateOrderRequest {
-  string apiKey = 1;
-  string token = 2;
-  string productId = 3;
-  string shopId = 4;
-  Address address = 5;
-  uint32 quantity = 6;
+  string apiKey = 47;
+  string token = 48;
+  string productId = 49;
+  string shopId = 50;
+  Address address = 51;
+  uint32 quantity = 52;
 }
 
 message CreateOrderResponse {
-  string orderId = 6;
-  string currency = 7;
-  float amount = 8;
-  string productName = 9;
-  string productId = 10;
-  string shopId = 11;
+  string orderId = 53;
+  string currency = 54;
+  float amount = 55;
+  string productName = 56;
+  string productId = 57;
+  string shopId = 58;
+  string productImage = 59;
 }
