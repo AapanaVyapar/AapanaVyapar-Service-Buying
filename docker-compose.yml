@@ -7,6 +7,6 @@ services:
     build:
       context: ./redis-sharding/redis-tls-container/
     ports:
-      - "6372:6372"
+      - "16399:16399"
     volumes:
       - ./redis-sharding/redis-tls-container/certs:/etc/certs

@@ -83,7 +83,7 @@ func (buyingService *BuyingService) PlaceOrder(ctx context.Context, request *pb.
 	distance := 100
 	deliveryCost := mapper.CalculateDeliveryCost(distance, &address)
 
-	price := product.Price
+	price := (product.Price * float32(request.GetQuantity())) * 100
 	price = price - ((price / 100) * float32(product.Offer))
 	price += deliveryCost
 

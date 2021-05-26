@@ -6,6 +6,6 @@ services:
     build:
       context: ./
     ports:
-      - "6372:6372"
+      - "16399:16399"
     volumes:
       - ./certs:/etc/certs
